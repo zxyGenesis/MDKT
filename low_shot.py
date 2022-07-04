@@ -93,41 +93,11 @@ def training_loop(lowshot_dataset,novel_test_feats, params, batchsize=1000, maxi
 	tmp_epoach = 0
 	tmp_count = 0
 	tmp_rate = params.lr
-	recode_reload = {}
-	reload_model = False
 	max_tmp_count = 8
 	optimizer = torch.optim.Adam(model.parameters(), tmp_rate, weight_decay=params.wd)
 	time = getTime()
 	for epoch in range(maxiters):
-		if reload_model == True:
-			if str(tmp_epoach) in recode_reload:
-				recode_reload[str(tmp_epoach)] += 1
-				tmp_rate = tmp_rate * 0.1
-				if tmp_rate < 1e-07:
-					print('Training end')
-					old_path = 'FSLModel/tmp/' + str(params.nshot)+ '/' + time + str(params.nshot) +'_save_' + str(tmp_epoach)+ '_' + str(round(best_ACC, 4)) + '.pth'
-					new_path = 'FSLModel/BestModel/' + str(params.nsplit) + '/'
-					if os.path.exists(new_path) == False:
-						os.makedirs(new_path)
-					if reload == False:
-						best_model = torch.load(old_path)
-						best_w = best_model['test_w']
-						adj = graph_generate(best_w.clone().detach().cpu().numpy(), 5)
-						np.save('graph1', adj)
-					shutil.move(old_path,new_path)
-					shutil.rmtree('FSLModel/tmp/' + str(params.nshot))
-					return 0
-				print('learning decay: ', str(tmp_epoach) ,  tmp_rate)
-				for param_group in optimizer.param_groups:
-					param_group['lr'] = param_group['lr'] * 0.1
-			else:
-				recode_reload[str(tmp_epoach)] = 1
-				print('learning keep: ', tmp_epoach)
-			pretrained_model = 'FSLModel/tmp/' + str(params.nshot)+ '/' + time + str(params.nshot) +'_save_' + str(tmp_epoach)+ '_' + str(round(best_ACC, 4)) + '.pth'
-			pretrain = torch.load(pretrained_model)
-			model.load_state_dict(pretrain['state_dict'])
-			reload_model = False
-
+		
 		(x,y) = lowshot_dataset.get_sample(batchsize)
 		optimizer.zero_grad()
 
@@ -158,12 +128,7 @@ def training_loop(lowshot_dataset,novel_test_feats, params, batchsize=1000, maxi
 					'test_w': model.test_w,
 				}
 				torch.save(states, save_file_path)
-				tmp_count = 0
-				tmp_epoach = epoch
 				print('save: ' , epoch)
-			if tmp_count == max_tmp_count:
-				reload_model = True
-				tmp_count = 0
 
 	return model
 
