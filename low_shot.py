@@ -90,10 +90,6 @@ def training_loop(lowshot_dataset,novel_test_feats, params, batchsize=1000, maxi
 	loss_function = nn.CrossEntropyLoss().cuda()
 
 	best_ACC = 0.0
-	tmp_epoach = 0
-	tmp_count = 0
-	tmp_rate = params.lr
-	max_tmp_count = 8
 	optimizer = torch.optim.Adam(model.parameters(), tmp_rate, weight_decay=params.wd)
 	time = getTime()
 	for epoch in range(maxiters):
@@ -118,7 +114,6 @@ def training_loop(lowshot_dataset,novel_test_feats, params, batchsize=1000, maxi
 
 		if (epoch%10==0):
 			accs = eval_loop(test_loader, model, novel_classes)
-			tmp_count += 1
 			if  accs[1] > best_ACC :
 				print(accs[1])
 				best_ACC = accs[1]
