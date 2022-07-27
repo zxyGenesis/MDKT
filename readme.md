@@ -1,4 +1,7 @@
 The implementaion of paper [Multi-directional Knowledge Transfer for Few-Shot Learning](http://staff.ustc.edu.cn/~hexn/papers/mm22-knowledge-few-shot.pdf), which has been accepted by  ACM Multimedia 2022.
+
+![avatar](https://raw.githubusercontent.com/zxyGenesis/MDKT/main/demo/Framework.jpg)
+
 ## Requirements
 
 - Python3
