@@ -83,9 +83,8 @@ def training_loop(lowshot_dataset,novel_test_feats, params, batchsize=1000, maxi
 	if os.path.exists('FSLModel/tmp/' + str(params.nshot)) == False:
 		os.makedirs('FSLModel/tmp/' + str(params.nshot))
 
-	model = FSLModel(reload).cuda()
-	if params.nshot == 1:
-		model.a = 2
+	model = FSLModel(params.nshot,reload).cuda()
+
 	test_loader = get_test_loader(novel_test_feats)
 	loss_function = nn.CrossEntropyLoss().cuda()
 
