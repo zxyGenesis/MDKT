@@ -100,7 +100,7 @@ class FSLModel(nn.Module):
 
         scores_v = torch.mm(x, v_final.t())
         scores_t = torch.mm(x, t_final.t())
-        self.test_w = v_final + self.a*t_final
+        self.test_w = v_final + self.a[n-1]*t_final
         scores_all = torch.mm(x, self.test_w.t())
         return scores_v, scores_t, scores_all, t_final, v_final
 
