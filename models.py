@@ -71,7 +71,7 @@ class GAT(nn.Module):
 
 
 class FSLModel(nn.Module):
-    def __init__(self, reload):
+    def __init__(self, n, reload):
         super(FSLModel, self).__init__()
         self.test_w = []
         self.Word_Vector = torch.FloatTensor(np.load('imagenet1360wordvec.npy')).cuda()
@@ -81,7 +81,8 @@ class FSLModel(nn.Module):
             relation = np.load('ori_graph.npy')
         else:
             relation = np.load('graph1.npy')
-        self.a = 1
+        self.a = [2,1,1,1,1]
+        self.n = n
         self.adj = torch.from_numpy(relation).to(torch.float32).cuda()
         self.W = nn.Parameter(torch.zeros(size=(1360, 2048)))
         self.gat1 = GAT(1000, 2048, 0.5, 0.2, 8)
